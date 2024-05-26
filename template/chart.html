@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report</title>
+</head>
+
+<body>
+    <div id="CourseLineChart" style="height: 300px; width: 100%;"></div>
+    <label for="groupFilter">Filter by Group:</label>
+    <select id="groupFilter" onchange="updateCourseLineChart()">
+        <option value="">All Groups</option>
+        <!-- Group options will be populated here -->
+    </select>
+    <label for="timeFilter">Filter by Time:</label>
+    <select id="timeFilter" onchange="updateCourseLineChart()">
+        <option value="">All Time</option>
+        <option value="week">Last 1 Week</option>
+        <option value="month">Last 1 Month</option>
+        <option value="6months">Last 6 Months</option>
+        <option value="year">Last 1 Year</option>
+    </select>
+    <div id="CoursePieChart" style="height: 300px; width: 100%;"></div>
+    <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+    <script src="scripts/chart.js"></script>
+
+</body>
+
+</html>
