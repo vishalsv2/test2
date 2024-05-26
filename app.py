@@ -1,6 +1,6 @@
 import pymongo
 from datetime import datetime
-from flask import request, Flask, render_template, send_file
+from flask import request, Flask, send_file
 from json import load, dumps
 import os
 
@@ -10,6 +10,18 @@ MongoClient = pymongo.MongoClient("mongodb+srv://vishal:User123@test1.qveospq.mo
 
 
 ROOT_PATH = os.path.dirname(__file__)
+
+def getAllStudentsData():    
+    db = MongoClient.mystudents
+    collection = db.students 
+    StudentsData = list(collection.find({}))
+    for student in StudentsData:
+        for group in student['groups'].keys():
+            if student['groups'][group] in [None,'None']:
+                student['groups'][group] = 'SNA COMMUNITY'    
+
+    return StudentsData
+
 
 @app.route("/")
 def index():
@@ -24,9 +36,8 @@ def reports():
 def getGraphDataForMonth():
     course = request.args.get("course")
     duration = request.args.get("duration")
-    db = MongoClient.mystudents
-    collection = db.students 
-    StudentsData = list(collection.find({}))
+    
+    StudentsData = getAllStudentsData()
     DateWiseCounter = {}
     dataPoints = []
     for student in StudentsData:
@@ -61,15 +72,9 @@ def getGraphDataForMonth():
 
 
 @app.route("/getStudentsData")
-def getStudentData():
-    # with open(r'C:\Users\visha\Desktop\GUI_Students_Data\students.json',encoding='utf-8') as StudentsFile:
-    #     StudentsData = load(StudentsFile)
-    
-    db = MongoClient.mystudents
-    collection = db.students 
-    StudentsData = list(collection.find({}))
+def getStudentsData():
+    return dumps(getAllStudentsData(),default=str)
 
-    return dumps(StudentsData,default=str)
      
 @app.route("/<path:path>")
 def renderFile(path):
@@ -78,17 +83,15 @@ def renderFile(path):
 
 @app.route("/getCourseEnrollmentPercentage")
 def getCourseEnrollmentPercentage():
-    # course = request.args.get("course")
-    db = MongoClient.mystudents
-    collection = db.students 
-    StudentsData = list(collection.find({}))
+    
+    StudentsData = getAllStudentsData()
     CoursesDict = {}
     
     for student in StudentsData:
         for course in student['groups'].values():            
             if type(course) is not str:
                 course = str(course)
-            if course.lower() == 'none':
+            if course.lower() == 'sna community':
                 continue
             if course in CoursesDict.keys():
                 CoursesDict[course] += 1
