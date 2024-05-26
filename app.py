@@ -13,12 +13,12 @@ ROOT_PATH = os.path.dirname(__file__)
 
 @app.route("/")
 def index():
-    return open(r'template/index.html').read()  
+    return open(os.path.join(ROOT_PATH,r'template/index.html')).read()  
 
 
 @app.route("/reports")
 def reports():
-    return open(r'template/chart.html').read()
+    return open(os.path.join(ROOT_PATH,r'template/chart.html')).read()
 
 @app.route("/getGraphDataByCourse")
 def getGraphDataForMonth():
